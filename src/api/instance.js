@@ -5,12 +5,12 @@ export const auth = axios.create({
 });
 
 auth.interceptors.request.use(config => {
-  const accessToken = localStorage.getItem('access_token');
+  const accessToken = localStorage.getItem('token');
 
   if (!accessToken) {
-    config.headers['Authorization'] = null;
+    config.headers.Authorization = null;
   } else {
-    config.headers['Authorization'] = `Bearer ${accessToken}`;
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
   return config;
