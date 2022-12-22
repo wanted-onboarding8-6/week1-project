@@ -7,7 +7,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [reqInputs, setReqInputs] = useState({ id: '', pw: '' });
 
-  const getReadInput = e => {
+  const loginInputHandler = e => {
     if (e.target.id === 'user-id-input') {
       setReqInputs({ ...reqInputs, id: e.target.value });
     } else {
@@ -15,14 +15,14 @@ function LoginPage() {
     }
   };
 
-  const getSubmit = async e => {
+  const login = async e => {
     try {
       e.preventDefault();
-      const res = await signAPI.goSignIn({
+      const { data } = await signAPI.goSignIn({
         email: reqInputs.id,
         password: reqInputs.pw,
       });
-      window.localStorage.setItem('token', res.data.access_token);
+      window.localStorage.setItem('token', data.access_token);
       navigate('/todo');
     } catch (error) {
       console.error(error);
@@ -39,14 +39,15 @@ function LoginPage() {
       navigate('/todo');
     }
   }, [navigate]);
+
   return (
-    <StFormContainer onSubmit={getSubmit}>
+    <StFormContainer onSubmit={login}>
       <div className="input-wrapper">
         <label htmlFor="user-id-input">id</label>
         <StFormInput
           id="user-id-input"
           name="user-id-input"
-          onChange={getReadInput}
+          onChange={loginInputHandler}
           value={reqInputs.id}
         />
       </div>
@@ -55,12 +56,11 @@ function LoginPage() {
         <StFormInput
           id="user-pw-input"
           name="user-pw-input"
-          onChange={getReadInput}
+          onChange={loginInputHandler}
           value={reqInputs.pw}
           type="password"
         />
       </div>
-
       <StFormBtn>로그인하기</StFormBtn>
       <StFormBtn onClick={getSignUp}>회원가입하기</StFormBtn>
     </StFormContainer>
