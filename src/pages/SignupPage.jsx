@@ -10,6 +10,7 @@ function SignupPage() {
     idValid: false,
     pwValid: false,
   });
+
   const getReadInput = e => {
     if (e.target.id === 'register-id-input') {
       // eslint-disable-next-line
@@ -30,6 +31,7 @@ function SignupPage() {
       }
     }
   };
+  
   const getSubmit = async e => {
     try {
       e.preventDefault();

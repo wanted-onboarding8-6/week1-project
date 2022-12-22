@@ -12,6 +12,7 @@ function MainPage() {
   const getUserInput = e => {
     setUserTodo(e.target.value);
   };
+
   const getSubmit = async e => {
     try {
       e.preventDefault();
@@ -33,6 +34,7 @@ function MainPage() {
       alert('입력사항을 확인해주세요');
     }
   };
+
   const getSyncTodos = async () => {
     try {
       const res = await axios.get('https://pre-onboarding-selection-task.shop/todos', {
@@ -45,12 +47,14 @@ function MainPage() {
       alert('입력사항을 확인해주세요');
     }
   };
+
   useEffect(() => {
     getSyncTodos();
     if (window.localStorage.getItem('token') === null) {
       navigate('/');
     }
   }, [navigate]);
+  
   return (
     <StMainContainer>
       <StFormContainer onSubmit={getSubmit}>

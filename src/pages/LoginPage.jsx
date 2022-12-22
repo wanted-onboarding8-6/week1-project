@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { signAPI } from '../api/api';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const navigate = useNavigate();
   const [reqInputs, setReqInputs] = useState({ id: '', pw: '' });
+
   const getReadInput = e => {
     if (e.target.id === 'user-id-input') {
       setReqInputs({ ...reqInputs, id: e.target.value });
@@ -21,7 +23,7 @@ function LoginPage() {
         password: reqInputs.pw,
       });
       window.localStorage.setItem('token', res.data.access_token);
-      navigate('/main');
+      navigate('/todo');
     } catch (error) {
       console.error(error);
     }
@@ -34,7 +36,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (window.localStorage.getItem('token') !== null) {
-      navigate('/main');
+      navigate('/todo');
     }
   }, [navigate]);
   return (
