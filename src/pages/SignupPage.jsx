@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { signAPI } from '../api/api';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -36,10 +36,7 @@ function SignupPage() {
     try {
       e.preventDefault();
       if (inputValidation.idValid && inputValidation.pwValid) {
-        await axios.post('https://pre-onboarding-selection-task.shop/auth/signup', {
-          email: reqInputs.id,
-          password: reqInputs.pw,
-        });
+        await signAPI.goSignUp({ email: reqInputs.id, password: reqInputs.pw });
         alert('회원가입이 완료되었습니다!');
         navigate('/');
       }
