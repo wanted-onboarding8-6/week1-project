@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+//import
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ function LoginPage() {
   const getSubmit = async e => {
     try {
       e.preventDefault();
-      const res = await axios.post('https://pre-onboarding-selection-task.shop/auth/signin', {
+      const res = await signAPI.goSignIn({
         email: reqInputs.id,
         password: reqInputs.pw,
       });
@@ -37,7 +37,7 @@ function LoginPage() {
     if (window.localStorage.getItem('token') !== null) {
       navigate('/main');
     }
-  });
+  }, [navigate]);
   return (
     <StFormContainer onSubmit={getSubmit}>
       <div className="input-wrapper">
