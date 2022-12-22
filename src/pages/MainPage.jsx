@@ -54,7 +54,7 @@ function MainPage() {
       navigate('/');
     }
   }, [navigate]);
-  
+
   return (
     <StMainContainer>
       <StFormContainer onSubmit={getSubmit}>

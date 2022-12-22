@@ -31,7 +31,7 @@ function SignupPage() {
       }
     }
   };
-  
+
   const getSubmit = async e => {
     try {
       e.preventDefault();
