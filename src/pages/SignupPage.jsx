@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { signAPI } from '../api/api';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -10,6 +10,7 @@ function SignupPage() {
     idValid: false,
     pwValid: false,
   });
+
   const getReadInput = e => {
     if (e.target.id === 'register-id-input') {
       // eslint-disable-next-line
@@ -30,19 +31,17 @@ function SignupPage() {
       }
     }
   };
+
   const getSubmit = async e => {
     try {
       e.preventDefault();
       if (inputValidation.idValid && inputValidation.pwValid) {
-        await axios.post('https://pre-onboarding-selection-task.shop/auth/signup', {
-          email: reqInputs.id,
-          password: reqInputs.pw,
-        });
+        await signAPI.goSignUp({ email: reqInputs.id, password: reqInputs.pw });
         alert('회원가입이 완료되었습니다!');
         navigate('/');
       }
     } catch (error) {
-      console.error(error);
+      alert('회원가입에 실패하였습니다.');
     }
   };
 

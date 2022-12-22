@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { signAPI } from '../api/api';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const navigate = useNavigate();
   const [reqInputs, setReqInputs] = useState({ id: '', pw: '' });
+
   const getReadInput = e => {
     if (e.target.id === 'user-id-input') {
       setReqInputs({ ...reqInputs, id: e.target.value });
@@ -17,12 +18,12 @@ function LoginPage() {
   const getSubmit = async e => {
     try {
       e.preventDefault();
-      const res = await axios.post('https://pre-onboarding-selection-task.shop/auth/signin', {
+      const res = await signAPI.goSignIn({
         email: reqInputs.id,
         password: reqInputs.pw,
       });
       window.localStorage.setItem('token', res.data.access_token);
-      navigate('/main');
+      navigate('/todo');
     } catch (error) {
       console.error(error);
     }
@@ -35,9 +36,9 @@ function LoginPage() {
 
   useEffect(() => {
     if (window.localStorage.getItem('token') !== null) {
-      navigate('/main');
+      navigate('/todo');
     }
-  });
+  }, [navigate]);
   return (
     <StFormContainer onSubmit={getSubmit}>
       <div className="input-wrapper">

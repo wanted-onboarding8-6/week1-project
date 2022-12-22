@@ -1,61 +1,74 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { todoAPI } from '../api/api';
 import styled from 'styled-components';
 
 function TodoCard({ info, syncData }) {
   const { id, todo, isCompleted } = info;
   const [isEdit, setIsEdit] = useState(false);
-  const [editContents, setEditContents] = useState(todo);
+  const [content, setContent] = useState({ todo, isCompleted });
+
   const modifyBtnHandler = () => {
     setIsEdit(true);
   };
+
   const modifyCancelHandler = () => {
-    setEditContents(todo);
+    setContent({ ...content, todo: todo });
     setIsEdit(false);
   };
+
   const userInputHandler = e => {
-    setEditContents(e.target.value);
-  };
-  const submitEditContentsHandler = async e => {
-    try {
-      e.preventDefault();
-      await axios.put(
-        `https://pre-onboarding-selection-task.shop/todos/${id}`,
-        {
-          todo: editContents,
-          isCompleted,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + window.localStorage.getItem('token'),
-          },
-        }
-      );
-      syncData();
-      setIsEdit(false);
-    } catch (error) {
-      console.error(error);
-    }
+    setContent(content => ({ ...content, todo: e.target.value }));
   };
 
-  const deleteTodoHandler = async () => {
+  const updateTodoHandler = useCallback(
+    async (content, e) => {
+      try {
+        e && e.preventDefault();
+        const editFormData = {
+          todo: content.todo,
+          isCompleted: content.isCompleted,
+        };
+        await todoAPI.updateTodo(id, editFormData);
+        syncData();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [id, syncData]
+  );
+
+  const onSubmitContent = e => {
+    updateTodoHandler(content, e);
+    setIsEdit(false);
+  };
+
+  const onCheckClick = () => {
+    setContent({ ...content, isCompleted: !isCompleted });
+    updateTodoHandler({ ...content, isCompleted: !isCompleted });
+  };
+
+  const deleteTodoHandler = useCallback(async () => {
     try {
-      await axios.delete(`https://pre-onboarding-selection-task.shop/todos/${id}`, {
-        headers: {
-          Authorization: 'Bearer ' + window.localStorage.getItem('token'),
-        },
-      });
+      await todoAPI.deleteTodo(id);
       syncData();
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [id, syncData]);
+
   return (
     <StCardBody>
       {!isEdit && (
         <>
-          {`할일: ${todo}`}
-          {` / 완료여부: ${isCompleted}`}
+          <div className="input-wrapper">
+            <StyledInput
+              id={id}
+              type="checkbox"
+              checked={isCompleted}
+              onChange={e => onCheckClick(e)}
+            />
+            <StyledLable htmlFor={id}>{`할일: ${todo}`}</StyledLable>
+          </div>
           <div className="btn-wrapper">
             <button className="todo-modify-btn" onClick={modifyBtnHandler}>
               수정
@@ -67,11 +80,13 @@ function TodoCard({ info, syncData }) {
         </>
       )}
       {isEdit && (
-        <StModifyFormContainer onSubmit={submitEditContentsHandler}>
-          <input className="user-modify-input" value={editContents} onChange={userInputHandler} />
+        <StModifyFormContainer onSubmit={onSubmitContent}>
+          <input className="user-modify-input" value={content.todo} onChange={userInputHandler} />
           <div className="btn-wrapper">
-            <button className="modify-complete-btn">완료</button>
-            <button className="modify-cancel-btn" onClick={modifyCancelHandler}>
+            <button type="submit" className="modify-complete-btn" onClick={onSubmitContent}>
+              완료
+            </button>
+            <button type="button" className="modify-cancel-btn" onClick={modifyCancelHandler}>
               취소
             </button>
           </div>
@@ -121,6 +136,32 @@ const StModifyFormContainer = styled.form`
     height: 5rem;
     font-size: 2.5rem;
   }
+`;
+
+const StyledInput = styled.input`
+  appearance: none;
+  border: 1.5px solid gainsboro;
+  border-radius: 0.35rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  position: relative;
+
+  &:checked {
+    border-color: transparent;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-color: #2b3467;
+  }
+`;
+
+const StyledLable = styled.label`
+  position: relative;
+  top: -1.1rem;
+  padding: 10px;
 `;
 
 export default TodoCard;
