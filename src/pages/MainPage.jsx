@@ -30,7 +30,7 @@ function MainPage() {
       setTodoList([...todoList, res.data]);
       setUserTodo('');
     } catch (error) {
-      console.error(error);
+      alert('입력사항을 확인해주세요');
     }
   };
   const getSyncTodos = async () => {
@@ -42,7 +42,7 @@ function MainPage() {
       });
       setTodoList([...res.data]);
     } catch (error) {
-      console.error(error);
+      alert('입력사항을 확인해주세요');
     }
   };
   useEffect(() => {
