@@ -6,16 +6,20 @@ function TodoCard({ info, syncData }) {
   const { id, todo, isCompleted } = info;
   const [isEdit, setIsEdit] = useState(false);
   const [editContents, setEditContents] = useState(todo);
+  
   const modifyBtnHandler = () => {
     setIsEdit(true);
   };
+
   const modifyCancelHandler = () => {
     setEditContents(todo);
     setIsEdit(false);
   };
+
   const userInputHandler = e => {
     setEditContents(e.target.value);
   };
+
   const submitEditContentsHandler = async e => {
     try {
       e.preventDefault();
