@@ -1,56 +1,34 @@
 import React, { useCallback, useState } from 'react';
-import { todoAPI } from "../api/api";
+import { todoAPI } from '../api/api';
 import styled from 'styled-components';
 
 function TodoCard({ info, syncData }) {
   const { id, todo, isCompleted } = info;
   const [isEdit, setIsEdit] = useState(false);
-  const [content, setContent] = useState({todo, isCompleted});
-  
+  const [content, setContent] = useState({ todo, isCompleted });
+
   const modifyBtnHandler = () => {
     setIsEdit(true);
   };
 
   const modifyCancelHandler = () => {
-    setContent({...content, todo : todo})
+    setContent({ ...content, todo: todo });
     setIsEdit(false);
   };
 
-  const userInputHandler = (e) => {
-    setContent((content)=>({...content, todo : e.target.value}))
+  const userInputHandler = e => {
+    setContent(content => ({ ...content, todo: e.target.value }));
   };
 
   const updateTodoHandler = useCallback(
     async (content, e) => {
-    try {
-      e && e.preventDefault();
-      const editFormData = {
-        todo: content.todo,
-        isCompleted: content.isCompleted,
-      };
-      await todoAPI.updateTodo(id, editFormData);
-        syncData();
-      } catch (error) {
-        console.error(error);
-      }
-  },
-    [id, syncData]
-  );
-  
-  const onSubmitContent = (e) => {
-    updateTodoHandler(content, e);
-    setIsEdit(false);
-  }
-
-  const onCheckClick = () => {
-    setContent({...content, isCompleted: !isCompleted});
-    updateTodoHandler({...content, isCompleted: !isCompleted});
-  };
-
-  const deleteTodoHandler = useCallback(
-    async () => {
       try {
-        await todoAPI.deleteTodo(id);
+        e && e.preventDefault();
+        const editFormData = {
+          todo: content.todo,
+          isCompleted: content.isCompleted,
+        };
+        await todoAPI.updateTodo(id, editFormData);
         syncData();
       } catch (error) {
         console.error(error);
@@ -58,8 +36,26 @@ function TodoCard({ info, syncData }) {
     },
     [id, syncData]
   );
-  
-  
+
+  const onSubmitContent = e => {
+    updateTodoHandler(content, e);
+    setIsEdit(false);
+  };
+
+  const onCheckClick = () => {
+    setContent({ ...content, isCompleted: !isCompleted });
+    updateTodoHandler({ ...content, isCompleted: !isCompleted });
+  };
+
+  const deleteTodoHandler = useCallback(async () => {
+    try {
+      await todoAPI.deleteTodo(id);
+      syncData();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id, syncData]);
+
   return (
     <StCardBody>
       {!isEdit && (
@@ -67,9 +63,9 @@ function TodoCard({ info, syncData }) {
           <div className="input-wrapper">
             <StyledInput
               id={id}
-              type='checkbox'
+              type="checkbox"
               checked={isCompleted}
-              onChange={(e) => onCheckClick(e)}
+              onChange={e => onCheckClick(e)}
             />
             <StyledLable htmlFor={id}>{`할일: ${todo}`}</StyledLable>
           </div>
@@ -87,15 +83,10 @@ function TodoCard({ info, syncData }) {
         <StModifyFormContainer onSubmit={onSubmitContent}>
           <input className="user-modify-input" value={content.todo} onChange={userInputHandler} />
           <div className="btn-wrapper">
-            <button
-              type='submit'
-              className="modify-complete-btn"
-              onClick={onSubmitContent}
-            >완료</button>
-            <button
-              type='button'
-              className="modify-cancel-btn"
-              onClick={modifyCancelHandler}>
+            <button type="submit" className="modify-complete-btn" onClick={onSubmitContent}>
+              완료
+            </button>
+            <button type="button" className="modify-cancel-btn" onClick={modifyCancelHandler}>
               취소
             </button>
           </div>
@@ -174,4 +165,3 @@ const StyledLable = styled.label`
 `;
 
 export default TodoCard;
-

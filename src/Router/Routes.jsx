@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import MainPage from './pages/MainPage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import MainPage from '../pages/MainPage';
+import LoginPage from '../pages/LoginPage';
+import SignupPage from '../pages/SignupPage';
 
 function Router() {
   const Private = ({ children, to: direction, main }) => {
-    const isLoggedIn = useMemo(() => localStorage.getItem('TOKEN'), []);
+    const isLoggedIn = useMemo(() => localStorage.getItem('token'), []);
 
     if (isLoggedIn && !main) {
       return <Navigate to={direction} replace />;
