@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { todoAPI } from '../api/api';
 import TodoCard from '../components/TodoCard';
 
 function MainPage() {
@@ -9,26 +9,16 @@ function MainPage() {
   const [todoList, setTodoList] = useState([]);
   const [userTodo, setUserTodo] = useState('');
 
-  const getUserInput = e => {
+  const todoInputHandler = e => {
     setUserTodo(e.target.value);
   };
 
-  const getSubmit = async e => {
+  const createTodoItem = async e => {
     try {
       e.preventDefault();
-      const res = await axios.post(
-        'https://pre-onboarding-selection-task.shop/todos',
-        {
-          todo: userTodo,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      );
+      const { data } = await todoAPI.createTodo({ todo: userTodo });
 
-      setTodoList([...todoList, res.data]);
+      setTodoList([...todoList, data]);
       setUserTodo('');
     } catch (error) {
       alert('입력사항을 확인해주세요');
@@ -37,12 +27,9 @@ function MainPage() {
 
   const getSyncTodos = async () => {
     try {
-      const res = await axios.get('https://pre-onboarding-selection-task.shop/todos', {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
-      setTodoList([...res.data]);
+      const { data } = await todoAPI.getTodos();
+
+      setTodoList([...data]);
     } catch (error) {
       alert('입력사항을 확인해주세요');
     }
@@ -57,10 +44,10 @@ function MainPage() {
 
   return (
     <StMainContainer>
-      <StFormContainer onSubmit={getSubmit}>
+      <StFormContainer onSubmit={createTodoItem}>
         <input
           id="todo-input"
-          onChange={getUserInput}
+          onChange={todoInputHandler}
           value={userTodo}
           placeholder="할일을 입력해주세요."
         />
