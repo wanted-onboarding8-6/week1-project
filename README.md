@@ -122,7 +122,7 @@ const createAccount = async e => {
 
 4. Router 디렉토리를 분리하여 라우터 설정 관리
 
-```javarscript
+```javascript
 // src/Router/Routes.jsx
 
 function Router() {
