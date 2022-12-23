@@ -63,7 +63,45 @@ src
     }
 ```
 
-2. API 디렉토리를 생성하여 HTTP request 코드를 통합관리하고 Axios instance를 통한 코드 경량화
+2. API 디렉토리를 생성하여 HTTP request 코드를 통합관리하고 Axios instance를 통한 headers 값 설정 등 코드 간소화
+
+```javascript
+// src/api/instance.js
+import axios from 'axios';
+
+export const auth = axios.create({
+  baseURL: process.env.REACT_APP_AUTH_URL,
+});
+
+auth.interceptors.request.use(config => {
+  const accessToken = localStorage.getItem('token');
+
+  if (!accessToken) {
+    config.headers.Authorization = null;
+  } else {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+
+  return config;
+});
+
+// src/api/api.js
+import { auth } from './instance';
+
+export const signAPI = {
+  goSignUp: data => auth.post(`/auth/signup`, data),
+  goSignIn: data => auth.post(`/auth/signin`, data),
+};
+
+export const todoAPI = {
+  createTodo: data => auth.post(`/todos`, data),
+  getTodoById: id => auth.get(`/todos/${id}`),
+  getTodos: () => auth.get(`/todos`),
+  updateTodo: (todoId, data) => auth.put(`/todos/${todoId}`, data),
+  deleteTodo: todoId => auth.delete(`/todos/${todoId}`),
+};
+```
+
 3. Private 함수를 이용한 redirect처리, ul 직접 접근 방지처리
 4. Router 디렉토리를 분리하여 라우터 설정 관리
 5. && 연산자 대신 삼항연산자 사용, 함수 네이밍 컨벤션 변경으로 코드 경량화와 가독성
