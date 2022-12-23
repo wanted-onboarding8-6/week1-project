@@ -36,10 +36,7 @@ function SignupPage() {
     try {
       e.preventDefault();
       if (inputValidation.idValid && inputValidation.pwValid) {
-        await signAPI.goSignUp({
-          email: reqInputs.id,
-          password: reqInputs.pw,
-        });
+        await signAPI.goSignUp({ email: reqInputs.id, password: reqInputs.pw });
         alert('회원가입이 완료되었습니다!');
         navigate('/');
       }
