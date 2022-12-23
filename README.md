@@ -12,6 +12,10 @@ https://github.com/TaeTaehoon/wanted-pre-onboarding-frontend \
 - router파트를 따로 디렉토리를 나누어 **가시성**을 높이기.
 - 위 내용들에 따른 전반적인 프로젝트 디렉토리 구조 변경하기.
 
+- 배포 링크 \
+https://thingkh-bk.shop
+
+
 ## 리팩토링 전/후 비교
 
 ## 1. 디렉토리 구조
