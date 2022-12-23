@@ -104,4 +104,33 @@ export const todoAPI = {
 
 3. Private 함수를 이용한 redirect처리, ul 직접 접근 방지처리
 4. Router 디렉토리를 분리하여 라우터 설정 관리
-5. && 연산자 대신 삼항연산자 사용, 함수 네이밍 컨벤션 변경으로 코드 경량화와 가독성
+5. && 연산자 대신 옵셔널체이닝과 삼항연산자 사용, 함수 네이밍 컨벤션 변경으로 코드 경량화와 가독성
+
+```javascript
+  // src/components/TodoCard.jsx
+  const updateTodoHandler = useCallback(
+    async (content, e) => {
+      try {
+        e ?. e.preventDefault();
+        const editFormData = {
+          todo: content.todo,
+          isCompleted: content.isCompleted,
+        };
+        await todoAPI.updateTodo(id, editFormData);
+        syncData();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [id, syncData]
+  );
+
+  const deleteTodoHandler = useCallback(async () => {
+    try {
+      await todoAPI.deleteTodo(id);
+      syncData();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id, syncData]);
+```
