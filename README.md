@@ -48,6 +48,8 @@ src
    │   ├── MainPage.jsx
    │   └── SignupPage.jsx
    │
+   ├── Router
+   │   └── Routes.jsx
    └── api
        ├── api.js
        └── instance.js
@@ -117,7 +119,30 @@ const createAccount = async e => {
 ```
 
 3. Private 함수를 이용한 redirect처리, ul 직접 접근 방지처리
+
 4. Router 디렉토리를 분리하여 라우터 설정 관리
+
+```javarscript
+// src/Router/Routes.jsx
+
+function Router() {
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Private to="/todo">
+            <LoginPage />
+          </Private>
+        }
+      />
+      {...}
+    </Routes>
+  );
+}
+
+```
+
 5. && 연산자 대신 옵셔널체이닝과 삼항연산자 사용, 함수 네이밍 컨벤션 변경으로 코드 경량화와 가독성
 
 ```javascript
@@ -147,4 +172,46 @@ const createAccount = async e => {
       console.error(error);
     }
   }, [id, syncData]);
+  
+  ...
+  
+   return (
+    <StCardBody>
+      {!isEdit ? (
+        <>
+          <div className="input-wrapper">
+            <StyledInput
+              id={id}
+              type="checkbox"
+              checked={isCompleted}
+              onChange={e => onCheckClick(e)}
+            />
+            <StyledLable htmlFor={id}>{`할일: ${todo}`}</StyledLable>
+          </div>
+          <div className="btn-wrapper">
+            <button className="todo-modify-btn" onClick={modifyBtnHandler}>
+              수정
+            </button>
+            <button className="todo-delete-btn" onClick={deleteTodoHandler}>
+              삭제
+            </button>
+          </div>
+        </>
+      ) : (
+        <StModifyFormContainer onSubmit={onSubmitContent}>
+          <input className="user-modify-input" value={content.todo} onChange={modifyInputHandler} />
+          <div className="btn-wrapper">
+            <button type="submit" className="modify-complete-btn" onClick={onSubmitContent}>
+              완료
+            </button>
+            <button type="button" className="modify-cancel-btn" onClick={modifyCancelHandler}>
+              취소
+            </button>
+          </div>
+        </StModifyFormContainer>
+      )}
+    </StCardBody>
+  );
+  
+  
 ```
