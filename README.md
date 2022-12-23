@@ -100,6 +100,20 @@ export const todoAPI = {
   updateTodo: (todoId, data) => auth.put(`/todos/${todoId}`, data),
   deleteTodo: todoId => auth.delete(`/todos/${todoId}`),
 };
+
+// src/pages/SignupPage.jsx
+const createAccount = async e => {
+  try {
+    e.preventDefault();
+    if (inputValidation.idValid && inputValidation.pwValid) {
+      await signAPI.goSignUp({ email: reqInputs.id, password: reqInputs.pw });
+      alert('회원가입이 완료되었습니다!');
+      navigate('/');
+    }
+  } catch (error) {
+    alert('회원가입에 실패하였습니다.');
+  }
+};
 ```
 
 3. Private 함수를 이용한 redirect처리, ul 직접 접근 방지처리
