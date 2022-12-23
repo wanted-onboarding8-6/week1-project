@@ -11,7 +11,7 @@ function SignupPage() {
     pwValid: false,
   });
 
-  const getReadInput = e => {
+  const signinInputHandler = e => {
     if (e.target.id === 'register-id-input') {
       // eslint-disable-next-line
       const idReg = /^[a-zA-Z0-9+-\_.]*@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/gi;
@@ -32,7 +32,7 @@ function SignupPage() {
     }
   };
 
-  const getSubmit = async e => {
+  const createAccount = async e => {
     try {
       e.preventDefault();
       if (inputValidation.idValid && inputValidation.pwValid) {
@@ -46,12 +46,12 @@ function SignupPage() {
   };
 
   return (
-    <StFormContainer onSubmit={getSubmit}>
+    <StFormContainer onSubmit={createAccount}>
       <div className="input-wrapper">
         <label htmlFor="register-id-input">id(email)</label>
         <StFormInput
           id="register-id-input"
-          onChange={getReadInput}
+          onChange={signinInputHandler}
           placeholder="이메일 주소(xxxx@xxx.xxx)"
         />
       </div>
@@ -59,12 +59,11 @@ function SignupPage() {
         <label htmlFor="register-pw-input">pw</label>
         <StFormInput
           id="register-pw-input"
-          onChange={getReadInput}
+          onChange={signinInputHandler}
           placeholder="8자리 이상"
           type="password"
         />
       </div>
-
       <StFormBtn valid={inputValidation}>회원가입하기</StFormBtn>
     </StFormContainer>
   );

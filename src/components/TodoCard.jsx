@@ -16,14 +16,14 @@ function TodoCard({ info, syncData }) {
     setIsEdit(false);
   };
 
-  const userInputHandler = e => {
+  const modifyInputHandler = e => {
     setContent(content => ({ ...content, todo: e.target.value }));
   };
 
   const updateTodoHandler = useCallback(
     async (content, e) => {
       try {
-        e && e.preventDefault();
+        e?.preventDefault();
         const editFormData = {
           todo: content.todo,
           isCompleted: content.isCompleted,
@@ -58,7 +58,7 @@ function TodoCard({ info, syncData }) {
 
   return (
     <StCardBody>
-      {!isEdit && (
+      {!isEdit ? (
         <>
           <div className="input-wrapper">
             <StyledInput
@@ -78,10 +78,9 @@ function TodoCard({ info, syncData }) {
             </button>
           </div>
         </>
-      )}
-      {isEdit && (
+      ) : (
         <StModifyFormContainer onSubmit={onSubmitContent}>
-          <input className="user-modify-input" value={content.todo} onChange={userInputHandler} />
+          <input className="user-modify-input" value={content.todo} onChange={modifyInputHandler} />
           <div className="btn-wrapper">
             <button type="submit" className="modify-complete-btn" onClick={onSubmitContent}>
               완료
